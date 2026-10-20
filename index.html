@@ -1,0 +1,242 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة النيون التكنولوجية المتقدمة</title>
+    
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Cairo', sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        background: #0a0a0f;
+        color: #ffffff;
+      }
+
+      #backgroundImage {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -2;
+        object-fit: cover;
+        transition: opacity 0.8s ease-in-out;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(10,10,15,0.2) 0%, rgba(10,10,15,0.9) 100%);
+        z-index: -1;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 650px;
+        padding: 25px;
+        text-align: center;
+        z-index: 1;
+      }
+
+      .welcome-msg {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #00f0ff;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+      }
+
+      .clock {
+        font-size: 5.5rem;
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 5px;
+        color: #ffffff;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.2);
+        font-family: monospace, 'Cairo';
+      }
+
+      .date {
+        font-size: 1.1rem;
+        margin-bottom: 35px;
+        color: #8b8ba7;
+        font-weight: 600;
+      }
+
+      .search-form {
+        width: 100%;
+        display: flex;
+        position: relative;
+        margin-bottom: 45px;
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 240, 255, 0.3);
+      }
+
+      .search-form input {
+        width: 100%;
+        padding: 18px 25px;
+        padding-left: 110px;
+        border: none;
+        outline: none;
+        font-size: 1.15rem;
+        background: rgba(15, 15, 25, 0.9);
+        color: #ffffff;
+      }
+
+      .search-form button {
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 11px 24px;
+        border: none;
+        background: linear-gradient(135deg, #00f0ff, #0072ff);
+        color: #0a0a0f;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 900;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        transition: all 0.2s ease;
+      }
+
+      .search-form button:hover {
+        filter: brightness(1.2);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 20px 15px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .card[data-tech="google"]:hover { border-color: #4285F4; box-shadow: 0 0 20px rgba(66, 133, 244, 0.4); background: rgba(66, 133, 244, 0.05); }
+      .card[data-tech="youtube"]:hover { border-color: #FF0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); background: rgba(255, 0, 0, 0.05); }
+      .card[data-tech="ai"]:hover { border-color: #10a37f; box-shadow: 0 0 20px rgba(16, 163, 127, 0.4); background: rgba(16, 163, 127, 0.05); }
+      .card[data-tech="facebook"]:hover { border-color: #1877F2; box-shadow: 0 0 20px rgba(24, 119, 242, 0.4); background: rgba(24, 119, 242, 0.05); }
+
+      .card:hover { transform: translateY(-5px); }
+
+      .icon-box {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        background: rgba(10, 10, 15, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        direction: ltr; 
+        unicode-bidi: bidi-override;
+      }
+
+      .card[data-tech="google"] .icon-box { color: #4285F4; border-color: rgba(66, 133, 244, 0.4); text-shadow: 0 0 8px rgba(66, 133, 244, 0.6); }
+      .card[data-tech="youtube"] .icon-box { color: #FF0000; border-color: rgba(255, 0, 0, 0.4); text-shadow: 0 0 8px rgba(255, 0, 0, 0.6); }
+      .card[data-tech="ai"] .icon-box { color: #10a37f; border-color: rgba(16, 163, 127, 0.4); text-shadow: 0 0 8px rgba(16, 163, 127, 0.6); }
+      .card[data-tech="facebook"] .icon-box { color: #1877F2; border-color: rgba(24, 119, 242, 0.4); text-shadow: 0 0 8px rgba(24, 119, 242, 0.6); }
+
+      .card span {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #d1d1e0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <img id="backgroundImage" src="https://unsplash.com" alt="Tech">
+    <div class="overlay"></div>
+
+    <div class="container">
+      <div class="welcome-msg" id="welcomeMessage">النظام متصل بالإنترنت</div>
+      
+      <div class="clock" id="liveClock">00:00</div>
+      <div class="date" id="liveDate">جاري تحميل البيانات...</div>
+
+      <!-- استخدام نظام إرسال تقليدي مباشر متوافق مع كافة المتصفحات لحل مشكلة الحجب -->
+      <form class="search-form" id="searchForm" action="https://google.com" method="GET" target="_blank">
+        <input type="text" name="q" placeholder="ابحث إلكترونياً أو اكتب الرابط الرئيسي..." required autocomplete="off">
+        <button type="submit">بحث</button>
+      </form>
+
+      <div class="grid">
+        <a href="https://google.com" target="_blank" class="card" data-tech="google">
+          <div class="icon-box">G</div>
+          <span>جوجل</span>
+        </a>
+        <a href="https://youtube.com" target="_blank" class="card" data-tech="youtube">
+          <div class="icon-box">Y</div>
+          <span>يوتيوب</span>
+        </a>
+        <a href="https://chatgpt.com" target="_blank" class="card" data-tech="ai">
+          <div class="icon-box">AI</div>
+          <span>ChatGPT</span>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="card" data-tech="facebook">
+          <div class="icon-box">F</div>
+          <span>فيسبوك</span>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      function updateTimeAndGreeting() {
+        const now = new Date();
+        let h = now.getHours();
+        let m = now.getMinutes();
+        
+        h = h < 10 ? '0' + h : h;
+        m = m < 10 ? '0' + m : m;
+        
+        document.getElementById('liveClock').textContent = h + ':' + m;
+        
+        const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+        document.getElementById('liveDate').textContent = now.toLocaleDateString('ar-EG', dateOptions);
+      }
+      
+      updateTimeAndGreeting();
+      setInterval(updateTimeAndGreeting, 1000);
+    </script>
+  </body>
+</html>
